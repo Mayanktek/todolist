@@ -1,25 +1,38 @@
-import React from 'react';
-import './App.css';
-import { Routes, Route, BrowserRouter } from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Login from './components/auth/login';
-import Registration from './components/auth/registration';
-import Dashboard from './pages/dashboard';
-import AddTodo from './components/todo/addtodo';
-import TodoList from './components/todo/todolist';
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
 
-function App() {
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import AddTodo from "./pages/AddTodo";
+import TodoList from "./pages/TodoList";
+
+const isAuth = () => !!localStorage.getItem("token");
+
+export default function App() {
   return (
-    <BrowserRouter>
+    <>
+      <Navbar />
+
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/register' element={<Registration />} />
-        <Route path='/dashboard' element={<Dashboard/>}/>
-        <Route path='/addtodo' element={<AddTodo/>}/>
-        <Route path='/todolist' element={<TodoList/>}/>
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        <Route
+          path="/dashboard"
+          element={isAuth() ? <Dashboard /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/addtodo"
+          element={isAuth() ? <AddTodo /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/todolist"
+          element={isAuth() ? <TodoList /> : <Navigate to="/" />}
+        />
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
-
-export default App;
